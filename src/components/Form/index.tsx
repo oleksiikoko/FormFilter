@@ -23,8 +23,6 @@ interface IProps {
 }
 
 const Form: React.FC<IProps> = (props) => {
-  const validation = (str: string) => false;
-
   const [formValidation, setFormValidation] = useState<IFormValidation>({
     firstName: false,
     lastName: false,
