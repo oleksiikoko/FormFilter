@@ -1,14 +1,7 @@
 import React, { useState, useRef } from "react";
 
 import { Input } from "components";
-
-interface IFormData {
-  firstName: string;
-  lastName: string;
-  phone: string;
-  sex: boolean;
-  age: number;
-}
+import { IFormData } from "interfaces";
 
 interface IFormValidation {
   firstName: boolean;
