@@ -1,0 +1,27 @@
+.table {
+  border: green 2px solid;
+  border-spacing: 0ch;
+  margin: 4rem;
+  thead tr {
+    background-color: greenyellow;
+    border-radius: 30px;
+  }
+
+  th {
+    text-align: left;
+    cursor: pointer;
+
+    &:last-child {
+      cursor: default;
+    }
+  }
+
+  td {
+    width: 15rem;
+    height: 1.6rem;
+    cursor: default;
+    &:last-child {
+      cursor: pointer;
+    }
+  }
+}

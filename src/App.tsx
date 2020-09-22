@@ -4,6 +4,8 @@ import { UserTable, Form } from "components";
 import { IFormData, IUser } from "interfaces";
 import { uuidv4, userStorageApi } from "utils";
 
+import "./public/index.scss";
+
 const App: React.FC = () => {
   const [usersData, setUsersData] = useState<Array<IUser>>(
     userStorageApi.getUsersDataFromStorage()

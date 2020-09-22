@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+import "./Table.scss";
+
 interface IProps {
   keys: any;
   data: Array<any>;
@@ -20,7 +22,7 @@ const Table: React.FC<IProps> = (props) => {
   };
 
   return (
-    <table>
+    <table className="table">
       <thead>
         <tr>
           {props.keys.map((item: any) => {
