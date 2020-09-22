@@ -1,0 +1,14 @@
+.form-input {
+  &--correct {
+    border: 1px solid green;
+  }
+
+  &__message {
+    &--succes {
+      color: green;
+    }
+    &--error {
+      color: red;
+    }
+  }
+}

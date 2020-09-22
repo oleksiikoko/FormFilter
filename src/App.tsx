@@ -1,7 +1,9 @@
 import * as React from "react";
 
-import { Input } from "components";
+import { Form } from "components";
 
-const App: React.FC = () => <Input />;
+const App: React.FC = () => {
+  return <Form />;
+};
 
 export default App;
