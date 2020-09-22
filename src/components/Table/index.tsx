@@ -45,16 +45,16 @@ const Table: React.FC<IProps> = (props) => {
               else return -1;
             }
           })
-          .map((item) => (
-            <tr key={item._id}>
-              <td>{item.firstName}</td>
-              <td>{item.lastName}</td>
-              <td>{item.phone}</td>
-              <td>{item.sex ? "Male" : "Femele"}</td>
-              <td>{item.age}</td>
-              <td onClick={() => props.onRemove(item._id)}>Remove</td>
-            </tr>
-          ))}
+          .map((item) => {
+            return (
+              <tr key={item._id}>
+                {Object.keys(item).map((key) => {
+                  return key !== "_id" && <td key={key}>{item[key]}</td>;
+                })}
+                <td onClick={() => props.onRemove(item._id)}>X</td>
+              </tr>
+            );
+          })}
       </tbody>
     </table>
   );

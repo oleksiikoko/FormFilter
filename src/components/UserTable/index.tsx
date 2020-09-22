@@ -16,7 +16,11 @@ const UserTable: React.FC<IProps> = (props) => {
     { name: "Sex", key: "sex" },
     { name: "Age", key: "age" },
   ];
-  return <Table data={props.data} keys={keys} onRemove={props.onRemove} />;
+  const data = props.data.map((item) => ({
+    ...item,
+    sex: item.sex ? "Male" : "Female",
+  }));
+  return <Table data={data} keys={keys} onRemove={props.onRemove} />;
 };
 
 export default UserTable;

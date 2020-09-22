@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 
 import { Input } from "components";
 import { IFormData } from "interfaces";
+import { validate } from "utils";
 
 interface IFormValidation {
   firstName: boolean;
@@ -15,21 +16,29 @@ interface IProps {
   onSubmit(value: IFormData): void;
 }
 
+const clearValidation = {
+  firstName: false,
+  lastName: false,
+  phone: false,
+  sex: false,
+  age: false,
+};
+const clearFormData = {
+  firstName: "",
+  lastName: "",
+  phone: "",
+  sex: false,
+  age: 0,
+};
+
 const Form: React.FC<IProps> = (props) => {
-  const [formValidation, setFormValidation] = useState<IFormValidation>({
-    firstName: false,
-    lastName: false,
-    phone: false,
-    sex: false,
-    age: false,
-  });
-  const [formData, setFormData] = useState<IFormData>({
-    firstName: "",
-    lastName: "",
-    phone: "",
-    sex: false,
-    age: 0,
-  });
+  const [formValidation, setFormValidation] = useState<IFormValidation>(
+    clearValidation
+  );
+  const [formData, setFormData] = useState<IFormData>(clearFormData);
+
+  const maleCheckbox = useRef<HTMLInputElement>(null);
+  const femaleCheckbox = useRef<HTMLInputElement>(null);
 
   const formIsValid = () => {
     try {
@@ -42,68 +51,57 @@ const Form: React.FC<IProps> = (props) => {
     return true;
   };
 
-  let maleCheckbox = useRef<HTMLInputElement>(null);
-  let femaleCheckbox = useRef<HTMLInputElement>(null);
-
-  const onlyLettersValidation = (value: string) => /^[a-zA-Z]+$/.test(value);
-  const uaNumberValidation = (value: string) => /^3?8?(0\d{9})$/.test(value);
-  const ageValidation = (value: number) => value <= 100 && value > 0;
-
-  const onFirstNameChange = (value: string, validated: boolean) => {
-    setFormValidation({ ...formValidation, firstName: validated });
-    setFormData({ ...formData, firstName: value });
-  };
-
-  const onLastNameChange = (value: string, validated: boolean) => {
-    setFormValidation({ ...formValidation, lastName: validated });
-    setFormData({ ...formData, lastName: value });
-  };
-
-  const onPhoneChange = (value: string, validated: boolean) => {
-    setFormValidation({ ...formValidation, phone: validated });
-    setFormData({ ...formData, phone: value });
+  const onFormChange = (
+    value: string | number | boolean,
+    validated: boolean,
+    key: string
+  ) => {
+    setFormValidation({ ...formValidation, [key]: validated });
+    setFormData({ ...formData, [key]: value });
   };
 
   const choseMale = () => {
-    setFormValidation({ ...formValidation, sex: true });
-    setFormData({ ...formData, sex: true });
+    onFormChange(true, true, "sex");
     femaleCheckbox.current!.checked = false;
   };
   const choseFemale = () => {
-    setFormValidation({ ...formValidation, sex: true });
-    setFormData({ ...formData, sex: false });
+    onFormChange(false, true, "sex");
     maleCheckbox.current!.checked = false;
   };
 
-  const onAgeChange = (value: number, validated: boolean) => {
-    setFormValidation({ ...formValidation, age: validated });
-    setFormData({ ...formData, age: value });
+  const clearForm = () => {
+    setFormValidation(clearValidation);
+    setFormData(clearFormData);
   };
 
   const onFormSumbit = () => {
-    if (formIsValid()) props.onSubmit(formData);
+    if (formIsValid()) {
+      props.onSubmit(formData);
+      clearForm();
+    }
   };
 
   return (
     <form>
       <Input
         label="First name"
-        name="firts-name"
+        name="firstName"
         type="text"
         placeholder="First name"
         value={formData.firstName}
-        validation={onlyLettersValidation}
-        onChange={onFirstNameChange}
+        validation={validate.onlyLettersValidation}
+        onChange={onFormChange}
         errorValidationMessage="Only En letters allowed"
         succesfullValidationMessage="✓"
       />
       <Input
         label="Last name"
-        name="last-name"
+        name="lastName"
         type="text"
         placeholder="Last name"
-        validation={onlyLettersValidation}
-        onChange={onLastNameChange}
+        value={formData.lastName}
+        validation={validate.onlyLettersValidation}
+        onChange={onFormChange}
         errorValidationMessage="Only En letters allowed"
         succesfullValidationMessage="✓"
       />
@@ -112,30 +110,36 @@ const Form: React.FC<IProps> = (props) => {
         name="phone"
         type="text"
         placeholder="380XXXXXX format"
-        validation={uaNumberValidation}
-        onChange={onPhoneChange}
+        value={formData.phone}
+        validation={validate.uaNumberValidation}
+        onChange={onFormChange}
         errorValidationMessage="Phone - 380... format"
         succesfullValidationMessage="✓"
       />
+      <label>Male</label>
       <input
         name="gender"
         type="checkbox"
         ref={maleCheckbox}
         onChange={choseMale}
+        checked={formData.sex && formValidation.sex}
       />
+      <label>Female</label>
       <input
         name="gender"
         type="checkbox"
         ref={femaleCheckbox}
         onChange={choseFemale}
+        checked={!formData.sex && formValidation.sex}
       />
       <Input
         label="Age"
         name="age"
         type="number"
         placeholder="1 - 100"
-        validation={ageValidation}
-        onChange={onAgeChange}
+        value={formData.age}
+        validation={validate.ageValidation}
+        onChange={onFormChange}
         errorValidationMessage="1 - 100"
         succesfullValidationMessage="✓"
       />

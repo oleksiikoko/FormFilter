@@ -7,8 +7,12 @@ interface IProps {
   name: string;
   type: string;
   placeholder?: string;
-  value?: string;
-  onChange(value: string | number | boolean, validated: boolean): void;
+  value?: string | number;
+  onChange(
+    value: string | number | boolean,
+    validated: boolean,
+    key: string
+  ): void;
 
   validation?(value: string | number): boolean;
   errorValidationMessage?: string;
@@ -19,13 +23,18 @@ const Input: React.FC<IProps> = (props) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const messageRef = useRef<HTMLParagraphElement>(null);
 
+  if (props.value === "" || props.value === 0) {
+    if (inputRef.current) inputRef.current!.className = "";
+    if (messageRef.current) messageRef.current!.style.display = "none";
+  }
+
   const validateInput = (event: React.ChangeEvent<HTMLInputElement>): void => {
     let validated = true;
     if (props.validation && event.target) {
       validated = props.validation(event.target.value);
     }
 
-    props.onChange(event.target.value, validated);
+    props.onChange(event.target.value, validated, props.name);
 
     //-----Change input style
     inputRef.current!.className = validated
